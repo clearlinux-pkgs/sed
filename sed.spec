@@ -4,7 +4,7 @@
 #
 Name     : sed
 Version  : 4.2.2
-Release  : 13
+Release  : 14
 URL      : http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
 Source0  : http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
 Summary  : No detailed summary available
