@@ -4,12 +4,12 @@
 #
 Name     : sed
 Version  : 4.2.2
-Release  : 14
+Release  : 15
 URL      : http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
 Source0  : http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : GPL-3.0+ GPL-3.0 GFDL-1.3
+License  : GFDL-1.3 GPL-3.0 GPL-3.0+
 Requires: sed-bin
 Requires: sed-doc
 Requires: sed-locales
@@ -48,12 +48,15 @@ locales components for the sed package.
 %setup -q -n sed-4.2.2
 
 %build
-export CFLAGS="$CFLAGS -Os -ffunction-sections"
-export CXXFLAGS="$CXXFLAGS -Os -ffunction-sections"
+export CFLAGS="$CFLAGS -Os -ffunction-sections "
+export CXXFLAGS="$CXXFLAGS -Os -ffunction-sections "
 %configure --disable-static
-make V=1 %{?_smp_mflags}
+make V=1  %{?_smp_mflags}
 
 %check
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
