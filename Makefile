@@ -1,5 +1,5 @@
 PKG_NAME := sed
-URL := http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
-ARCHIVES :=
+URL := http://ftp.gnu.org/gnu/sed/sed-4.3.tar.xz
+
 
 include ../common/Makefile.common
