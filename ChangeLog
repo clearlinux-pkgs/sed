@@ -1,4 +1,172 @@
+2017-02-03  Jim Meyering  <meyering@fb.com>
+
+	version 4.4
+	* NEWS: Record release date.
+
+	gnulib: update to latest
+
+	maint: avoid %x-format argument type mismatch
+	* sed/compile.c (savchar): Cast %x-format argument to "unsigned int"
+	rather than to "unsigned char".  Reported by Eric Blake in
+	https://lists.gnu.org/archive/html/sed-devel/2017-02/msg00000.html
+
+2017-02-02  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: fix broken xref
+	Remove an extraneous space after @xref. Older 'makeinfo' would fail with:
+
+	  ./doc/sed.texi:3461: @xref expected braces.
+	  ./doc/sed.texi:3461: ` {Execution Cycle} and @ref{Addresses ov...' is
+	                         too long for expansion; not expanded.
+
+	Introduced in sed-4.3-15-gb0009b8.
+
+	* doc/sed.texi: Remove space after @xref.
+
+2017-01-31  Jim Meyering  <meyering@fb.com>
+
+	gnulib: update to latest
+
+2017-01-31  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: add NEWS entry for recent newline bugfix
+	Bugfix in sed-4.3-12-g44d99bf (for https://bugs.gnu.org/25390) did not
+	included a corresponding NEWS entry.
+
+	* NEWS: Mention bugfix.
+
+2017-01-28  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: new 'multiple commands syntax' section
+	Explain which commands can be separated by semicolon and which require
+	newlines. Requested by Ori Avtalion in https://bugs.gnu.org/21845 .
+
+	* doc/sed.texi (Multiple commands syntax): New section in "sed scripts"
+	chapter.
+
+2017-01-24  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: update 'other resources' chapter
+	Remove broken link and update other resources in the manual.
+	Reported by olszkocj@aol.com in https://bugs.gnu.org/24770 .
+
+	* doc/sed.texi (Other Resources): Update wording.
+
+2017-01-18  Jim Meyering  <meyering@fb.com>
+
+	maint: update bootstrap and init.sh
+	* bootstrap: Update from gnulib.
+	* testsuite/init.sh: Likewise.
+
+2017-01-16  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: add 'branching and flow control' section
+	* doc/sed.texi (Branching and flow control): New section under 'Advanced
+	Sed' chapter.
+
+	doc: add 'join lines' example
+	* doc/sed.texi (Joining lines): Add example of joining SMTP header
+	lines.
+
+2017-01-16  Norihiro Tanaka  <noritnk@kcn.ne.jp>
+
+	tests: new test for dfa newline bug
+	sed-4.3 would segfault with:
+	   printf '$LINENO $LINEN\nB\n' | sed -e 'N;s/\$LINENO\(.*\n\)/\1/'
+
+	Culprit is dfa crash if multi-lines are read in pattern space.
+	It is fixed at gnulib commit v0.1-1117-g823b5cb .
+	Reported by S. Gilles in https://bugs.gnu.org/25390
+
+	* testsuite/newline-dfa-bug.sh: New test.
+	* testsuite/local.mk: Add the test.
+
+2017-01-16  Assaf Gordon  <assafgordon@gmail.com>
+
+	gnulib: update to latest (with fix for dfa newline bug)
+	sed-4.3 would segfault due to dfa bug, see https://bugs.gnu.org/25390 .
+
+	* gnulib: Update to latest with various dfa fixes and improvement.
+	* m4/.gitignore: Add 'std-gnu11.m4', 'pthread_rwlock_rdlock.m4'.
+
+2017-01-16  Assaf Gordon  <assafgordon@gmail.com>
+
+	doc: improve README installation instructions
+	Mention README-hacking for git users.
+	Issue raised by Jean-Christophe Manciot in https://bugs.gnu.org/25377 .
+
+	* README: Improve installation paragraph based on coreutils' README.
+
+2017-01-16  Jim Meyering  <meyering@fb.com>
+
+	maint: avoid syntax-check-exposed nit
+	* doc/local.mk (doc/sed.1): Use $(...) rather than @...@.
+
+2017-01-15  Jim Meyering  <meyering@fb.com>
+
+	maint: do not distribute COPYING.DOC
+	* COPYING.DOC: Remove this file, now that we have doc/fdl.texi.
+	* Makefile.am (EXTRA_DIST): Don't distribute it.
+
+2017-01-14  Jim Meyering  <meyering@fb.com>
+
+	tests: skip valgrind-running tests when ASAN-enabled
+	* init.cfg (require_valgrind_): Skip when we detect that the
+	binary is ASAN-enabled.
+
+2017-01-13  Vagelis Prokopiou  <drz4007@gmail.com>  (tiny change)
+
+	maint: insert missing word in comment
+	* sed/sed.h (struct vector)[v_allocated]: Insert "of".
+
+2017-01-09  Assaf Gordon  <assafgordon@gmail.com>
+
+	build: skip building man page if needed
+	Skip building the man page if building from tarball (where 'doc/sed.1'
+	is already prebuilt). Build a stub if building from git but generating
+	the man page isn't possible (if there's no Perl or cross-compiling).
+	Cross-compilation issue reported by Vishal Biswas in
+	https://bugs.gnu.org/25358 .
+	Problematic 'perl' is related to https://bugs.gnu.org/25367 .
+
+	* configure.ac: Check for Perl, cross-compilation and tarball build;
+	Set automake variable BUILD_MAN_PAGE, BUILD_DUMMY_MAN_PAGE accordingly.
+	* doc/local.mk (doc/sed.1): Build conditionally if BUILD_MAN_PAGE is true;
+	Create a dummy man page if BUILD_DUMMY_MAN_PAGE is true.
+	* doc/sed-dummy.1: Stub man page.
+
+2017-01-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	build: fix out-of-tree builds without dep-tracking
+	Create sed,lib,doc,testsuite subdirectories at the end of
+	'configure', preventing build problems when building out of tree
+	with --disable-dependency-tracking.
+	Reported by Juan M. Guerrero in https://bugs.gnu.org/25371 .
+
+	* configure.ac: Call AS_MKDIR_P() to create subdirectories.
+
+2017-01-07  Jim Meyering  <meyering@fb.com>
+
+	doc: fix NEWS typo
+	* NEWS: Fix typo s/introducted/introduced/
+	* cfg.mk (old_NEWS_hash): Update.
+	Reported by Karl Berry.
+
+2017-01-01  Jim Meyering  <meyering@fb.com>
+
+	maint: update gnulib and copyright dates for 2017
+	* gnulib: Update to latest.
+	* all files: Run "make update-copyright".
+
+	maint: compile warning-free with -DDEBUG_LEAKS
+	* sed/regexp.c (release_regex) [DEBUG_LEAKS]: Modernize declaration.
+
 2016-12-30  Jim Meyering  <meyering@fb.com>
+
+	maint: post-release administrivia
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* cfg.mk (old_NEWS_hash): Auto-update.
 
 	version 4.3
 	* NEWS: Record release date.
@@ -1626,20 +1794,3 @@
 	fixup: add the properly-named new test files
 	* testsuite/Makefile.am (EXTRA_DIST): Add y-zero.*,
 	not y-NUL.* here.
-
-	maint: correct failing "version" test
-	* configure.ac (COPYRIGHT_YEAR): Update to 2014, so
-	the "version" test passes once again.
-	* doc/sed.1: Also commit this auto-generated-yet-VC'd file.
-
-	fix "y" to work with NUL in the RHS
-	* sed/execute.c (do_list) [case 'y']: Handle NUL bytes
-	in the RHS of a y/LHS/RHS/ transliteration.
-	* testsuite/y-zero.good: New test-related files.
-	* testsuite/y-zero.inp:
-	* testsuite/y-zero.sed:
-	* testsuite/Makefile.am (SEDTESTS): Add y-zero here.
-	* testsuite/Makefile.tests: And here.
-	* NEWS (Bug fixes): Describe it.
-	The bug was reported by table@inventati.org,
-	with the execute.c change mostly by Paolo Bonzini.
