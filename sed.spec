@@ -6,7 +6,7 @@
 #
 Name     : sed
 Version  : 4.4
-Release  : 20
+Release  : 21
 URL      : http://ftp.gnu.org/gnu/sed/sed-4.4.tar.xz
 Source0  : http://ftp.gnu.org/gnu/sed/sed-4.4.tar.xz
 Source99 : http://ftp.gnu.org/gnu/sed/sed-4.4.tar.xz.sig
