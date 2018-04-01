@@ -1,5 +1,35 @@
 GNU sed NEWS                                    -*- outline -*-
 
+* Noteworthy changes in release 4.5 (2018-03-31) [stable]
+
+** Bug fixes
+
+  sed now fails when matching very long input lines (>2GB).
+  Before, sed would silently ignore the regex without indicating an
+  error. [Bug present at least since sed-3.02]
+
+  sed no longer rejects comments and closing braces after y/// commands.
+  [Bug existed at least since sed-3.02]
+
+  sed -E --posix no longer ignores special meaning of '+','?','|' .
+  [Bug introduced in the original implementation of --posix option in
+  v4.1a-5-gba68fb4]
+
+  sed -i now creates selinux context based on the context of the symlink
+  instead of the symlink target. [Bug present since at least sed-4.2]
+  sed -i --follow-symlinks remains unchanged.
+
+  sed now treats the sequence '\x5c' (ASCII 92, backslash) as literal
+  backslash character, not as an escape prefix character.
+  [Bug present since sed-3.02.80]
+  Old behavior:
+     $ echo z | sed -E 's/(z)/\x5c1/' # identical to 's/(z)/\1/'
+     z
+  New behavior:
+     $ echo z | sed -E 's/(z)/\x5c1/'
+     \1
+
+
 * Noteworthy changes in release 4.4 (2017-02-03) [stable]
 
 ** Bug fixes
