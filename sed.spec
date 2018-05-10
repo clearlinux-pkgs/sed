@@ -6,7 +6,7 @@
 #
 Name     : sed
 Version  : 4.5
-Release  : 23
+Release  : 24
 URL      : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz
 Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz
 Source99 : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz.sig
