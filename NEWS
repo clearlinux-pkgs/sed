@@ -1,5 +1,38 @@
 GNU sed NEWS                                    -*- outline -*-
 
+* Noteworthy changes in release 4.6 (2018-12-19) [stable]
+
+** Improvements
+
+  sed now prints a clear error message when r/R/w/W (and s///w) commands
+  are missing a filename. Previously, w/W commands would fail with confusing
+  error message, while r/R would be a silent no-op.
+
+  sed now uses fully-buffered output (instead of line-buffered) when
+  writing to files. This should noticeably improve performance of "sed -i"
+  and other write commands.
+  Buffering can be disabled (as before) with "sed -u".
+
+  sed in non-cygwin windows environments (e.g. mingw) now properly handles
+  '\n' newlines in -b/--binary mode.
+
+** Bug fixes
+
+  sed no longer accesses invalid memory (heap overflow) when given invalid
+  backreferences in 's' command [bug#32082, present at least since sed-4.0.6].
+
+  sed no longer adds extraneous NUL when given s/$//n command.
+  [related to bug#32271, present since sed-4.0.7]
+
+  sed no longer accesses invalid memory (heap overflow) with s/$//n regexes.
+  [bug#32271, present since sed-4.3].
+
+** New Features
+
+  New option, --debug: print the input sed script in canonical form
+  and annotate program execution.
+
+
 * Noteworthy changes in release 4.5 (2018-03-31) [stable]
 
 ** Bug fixes

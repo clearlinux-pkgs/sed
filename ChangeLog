@@ -1,4 +1,606 @@
+2018-12-19  Jim Meyering  <meyering@fb.com>
+
+	version 4.6
+	* NEWS: Record release date.
+
+2018-12-17  Jim Meyering  <meyering@fb.com>
+
+	build: update gnulib to latest for linux/sparc c-stack fix
+
+2018-12-16  Jim Meyering  <meyering@fb.com>
+
+	build: update gnulib to latest for config.sub fix, etc.
+	* gnulib: Update for build- and test-related fixes,
+	including the config.sub fix for Solaris 10:
+	https://lists.gnu.org/r/grep-devel/2018-12/msg00013.html
+	* bootstrap: Update to latest.
+
+2018-12-13  Assaf Gordon  <assafgordon@gmail.com>
+
+	tests: fix obinary test error due to 'wc' spaces
+	On BSD systems "wc -c" prefixes the count with spaces,
+	leading to test error.
+	Discussed in https://lists.gnu.org/r/sed-devel/2018-12/msg00014.html .
+
+	* testsuite/obinary.sh: Remove leading spaces from 'wc -c' output.
+
+2018-12-12  Jim Meyering  <meyering@fb.com>
+
+	build: update gnulib to latest
+
+2018-12-09  Assaf Gordon  <assafgordon@gmail.com>
+
+	tests: add text/binary mode tests
+	This test is skipped on most platforms (which do not support O_BINARY
+	and do not differentiate between TEXT and BINARY files).
+
+	On cygwin, the test is skipped because default cygwin installations
+	do not use O_TEXT/O_BINARY modes (unless file systems are mounted with
+	special options).
+
+	In practice this test will only run on native Windows (e.g. when compiled
+	with mingw or msvc). Note that almost every other test will fail with
+	such a binary (due to excesssive "\r" in the output). Thus it is
+	recommended to explictly run just this test alone:
+
+	   make check SUBDIRS=. TESTS=testsuite/obinary.sh
+
+	The script tries to cover all cases mentioned in https://bugs.gnu.org/25459 .
+	See also https://lists.gnu.org/r/sed-devel/2018-10/msg00001.html .
+
+	* testsuite/obinary.sh: New test.
+	* testsuite/local.mk (TESTS): Add new test.
+
+2018-12-05  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: fix -b/--binary mode under windows/mingw
+	Discussed in https://lists.gnu.org/r/sed-devel/2018-10/msg00001.html .
+
+	* NEWS: Mention change.
+	* bootstrap.conf: Add gnulib's binary-io module.
+	* sed/sed.c (main): Set stdin/stdout to binary mode if needed.
+	* sed/utils.c (ck_mkstemp): Explicitly set binary mode on file
+	descriptor. It seems that on (non-cygwin) Windows the fdopen(3) call
+	ignores the 'b' in the 'mode' argument - and the file was always opened
+	in O_TEXT mode. Thus "--binary" was not working with "--inplace".
+
+2018-12-05  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: update .gitignore
+	Following gnulib recent update.
+	* lib/.gitignore, m4/.gitignore: Update file list.
+
+2018-12-05  Assaf Gordon  <assafgordon@gmail.com>
+
+	build: update autoconf version requirements
+	Require version 2.64 to bootstrap. This is already required in practice
+	by bootstrap.conf, but was not updated in configure.ac.
+	After recent gnulib update, gnulib-tool would complain:
+
+	  $ ./gnulib/gnulib-tool
+	  ./gnulib/gnulib-tool: *** minimum supported autoconf version is 2.63.\
+	      Try adding AC_PREREQ([2.63]) to your configure.ac.
+	  ./gnulib/gnulib-tool: *** Stop.
+
+	Hence this update.
+
+	* configure.ac: Require autoconf version 2.64 or later.
+
+2018-12-05  Assaf Gordon  <assafgordon@gmail.com>
+
+	gnulib: update to latest (for dfa improvements)
+
+2018-11-22  Jannick  <thirdedition@gmx.net>
+
+	sed: fix memory leakage under lint
+	The NULL-initialized char string in_place_extension is free'ed everytime
+	it is redefined (using xstrdup) and at program exit with any return code.
+
+	See: https://lists.gnu.org/r/sed-devel/2018-11/msg00005.html
+
+	* sed/sed.c (main, cleanup): Free 'in_place_extension' if running with
+	lint.
+
+2018-11-01  Assaf Gordon  <assafgordon@gmail.com>
+
+	build: rename stdin local variable
+	Under windows/msys2, defining 'bool stdin' variable results in
+	compilation errors:
+
+	  ../sed/execute.c:1252:8: error: expected declaration specifiers or '...'
+	  before numeric constant
+	   bool stdin = (input->fp && fileno (input->fp) == 0);
+	        ^~~~~
+
+	Reported by Jannick <thirdedition@gmx.net> in
+	https://lists.gnu.org/archive/html/sed-devel/2018-10/msg00019.html .
+
+	* sed/execute.c (debug_print_input): Rename 'stdin' to 'is_stdin'.
+
+2018-10-28  Jim Meyering  <meyering@fb.com>
+
+	maint: fix a syntax-check nit
+	* sed/compile.c (MISSING_FILENAME): Insert a space before "(", and
+	in a following comment.
+
+2018-10-27  Jim Meyering  <meyering@fb.com>
+
+	tests: avoid unnecessary dependency on Data::Dump
+	* testsuite/debug.pl: Don't use Data::Dump.  Unnecessary.
+	That package, perl-Data-Dump, appear not to be default-installed
+	on at least a Fedora 29 beta system.
+
+	sed: avoid UMR in --debug code path
+	* sed/debug.c (debug_print_function) [b, t, T]: For a b, t or T
+	command with no LABEL, do not access uninitialized memory.
+	I.e., print the label name only when there is one.
+
+2018-10-24  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: add --debug feature
+	    $ seq 3 | sed --debug -e 's/./--&--/ ; 2d'
+	    SED PROGRAM:
+	      s/./--&--/
+	      2 d
+	    INPUT:   'STDIN' line 1
+	    PATTERN: 1
+	    COMMAND: s/./--&--/
+	    MATCHED REGEX REGISTERS
+	      regex[0] = 0-1 '1'
+	    PATTERN: --1--
+	    COMMAND: 2 d
+	    END-OF-CYCLE:
+	    --1--
+	    INPUT:   'STDIN' line 2
+	    PATTERN: 2
+	    COMMAND: s/./--&--/
+	    MATCHED REGEX REGISTERS
+	      regex[0] = 0-1 '2'
+	    PATTERN: --2--
+	    COMMAND: 2 d
+	    END-OF-CYCLE:
+	    INPUT:   'STDIN' line 3
+	    PATTERN: 3
+	    COMMAND: s/./--&--/
+	    MATCHED REGEX REGISTERS
+	      regex[0] = 0-1 '3'
+	    PATTERN: --3--
+	    COMMAND: 2 d
+	    END-OF-CYCLE:
+	    --3--
+
+	Discussed in https://lists.gnu.org/r/sed-devel/2018-07/msg00006.html
+	and https://lists.gnu.org/r/sed-devel/2018-10/msg00007.html .
+
+	* NEWS: Mention new option.
+	* doc/sed.texi (Program options): Mention new option.
+	* sed/debug.c: New unit with debug printing functions.
+	* sed/sed.h (debug_print_command, debug_print_char, debug_print_program,
+	debug): Declare functions and global variable.
+	(struct sed_cmd): Add label_name member variable.
+	* sed/compile.c (compile_program): Save the label's name.
+	(cleanup_program_filenames): extracted function to free filenames.
+	(check_final_program) Don't delete the filenames, instead move it to ...
+	(finish_program) ... here.
+	* sed/execute.c (debug_print_end_of_cycle, debug_print_input,
+	debug_print_line): New debug functions (cannot be defined in debug.c as
+	execute's structures are private).
+	(execute_program, process_files): Call debug functions.
+	* sed/sed.c: (DEBUG_OPTION): New option for getoptlong.
+	(debug): New global variable.
+	(usage): Mention new option.
+	(main): Process new option and call debug functions if needed.
+	* testsuite/debug.pl: New tests.
+	* testsuite/local.mk (T): Add new tests.
+
+2018-10-19  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: change internal storage for 'R' command
+	For the 'R' command, keep a pointer to 'struct output' instead of just
+	to FILE*. No change in functionality. This will help future debug code
+	to know the filename of the associated file.
+
+	As a side effect, fix invalid code in W/w execution:
+	The previous code checked for 'cur_cmd->x.fp' (which was related to R
+	command, not W/w). Since 'x' is a union, 'x.fp' was not relevant to
+	the 'x.outf' (which is the struct associted with W/w commands).
+
+	* sed/sed.h (struct sed_cmd): Replace 'FILE*' with 'struct *output' for
+	R command.
+	* sed/compile.c (compile_program): Adjust as needed.
+	* sed/execute.c (execute_program): Adjust as needed.
+
+2018-10-18  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: reject r/R/w/W commands without a filename
+	w/W (and s///w) commands Without a filename would print a confusing error
+	message:
+	  $ sed w
+	  sed: couldn't open file : No such file or directory
+	While r/R commands with empty file name were a silent no-op.
+
+	With this change, sed programs with empty filename are rejected with a
+	clear error:
+
+	  $ sed 's/1/2/w'
+	  sed: -e expression #1, char 7: missing filename in r/R/w/W commands
+	  $ sed r
+	  sed: -e expression #1, char 1: missing filename in r/R/w/W commands
+
+	* NEWS: Mention change.
+	* sed/compile.c (get_openfile): Exit with an error message if filename
+	is missing. (compile_program): Same for 'r' command code.
+	* testsuite/missing-filename.sh: New test.
+	* testsuite/local.mk (T): Add new test.
+
+2018-10-12  Clint Adams  <clint@debian.org>  (tiny change)
+
+	doc: use @key{TAB} in texinfo
+	Discussed in https://bugs.gnu.org/22636 .
+
+	* doc/sed.texi: Use '@kbd{@key{TAB}}' instead of '@kbd{tab}' to improve
+	rendering in HTML and info formats.
+
+2018-10-12  Bjarni Ingi Gislason  <bjarniig@rhi.hi.is>  (tiny change)
+
+	doc: sed.x: some formatting corrections
+	Reported in https://bugs.gnu.org/30479 .
+
+	doc/sed.x: Change a HYPHEN-MINUS (code 0x55, 2D) to a dash (\-, minus)
+	if it matches " -[:alpha:]" or \(aq-[:alpha:] (for options); Use a pronoun
+	instead of a repeated noun.
+
+2018-10-12  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: update authors
+	* sed/sed.c (AUTHORS): Update.
+	* doc/sed.texi (@author): Update.
+
+2018-08-23  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: remove REG_PERL code
+	Perl-regexp syntax (PCRE) in GNU Sed is shelved indefinitely.
+	See https://bugs.gnu.org/22801 , https://bugs.gnu.org/22647 .
+	Remove all (unused) REG_PERL related code.
+
+	* sed/sed.c, sed/sed.h, sed/regexp.c, sed/compile.c: Remove REG_PERL code.
+
+2018-08-23  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: remove EXPERIMENTAL_DASH_N_OPTIMIZATION code
+	The optimization was buggy and was never enabled in a released version.
+
+	* sed/execute.c: Remove EXPERIMENTAL_DASH_N_OPTIMIZATION code.
+
+2018-08-23  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: replace street address with URL in license text
+	* basicdefs.h, sed/compile.c, sed/execute.c, sed/mbcs.c, sed/regexp.c,
+	sed/sed.c, sed/sed.h, sed/utils.c, sed/utils.h, testsuite/get-mb-cur-max.c,
+	testsuite/test-mbrtowc.c (GPL License notice): Replace FSF's office
+	address with 'https://www.gnu.org/licenses/'.
+
+2018-08-23  Assaf Gordon  <assafgordon@gmail.com>
+
+	build: use system's native sed during build
+	Use the locally built sed binary only during 'check*' targets,
+	but not during build/installation targets - it might be buggy, or contain
+	temporary debugging/ASAN features that can break the build.
+	See: https://lists.gnu.org/r/sed-devel/2018-08/msg00013.html .
+
+	* cfg.mk (PATH): Add the 'sed' directory to the PATH only if this is a
+	'check' target.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: mark function as attribute(malloc)
+	Suggested by gcc-8.2.0.
+
+	* sed/compile.c (read_label): Mark as _GL_ATTRIBUTE_MALLOC.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: add undefined-behavior build target
+	Using gcc-specific options, a recent gcc is required.
+	build with:
+	   make build-ubsan CC=gcc-8.2
+
+	* cfg.mk (build-ubsan): New target.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: add address-sanitizer build target
+	use 'make build-asan' to rebuild sed with gcc's address sanitizer.
+
+	* cfg.mk (build-asan): New target.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	gnulib: update to latest (for regex memory leaks)
+	Specifically for gnulib commits 66b99e5259,c5e76a9560.
+	see https://lists.gnu.org/r/bug-gnulib/2018-07/msg00127.html
+
+	sed: fix memory leak
+	* sed/regexp.c (match_regex): Free the previously allocated regex struct
+	before re-building the regex during program execution.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: free allocated memory under lint, remove DEBUG_LEAKS
+	Under normal operation there is no need for explicit freeing,
+	as all memory will be released when sed terminates.
+	During development (and specifically, valgrind and address-sanitizing)
+	enabling lint prevents false-positive warnings about memory
+	leaks.
+	Lint mode can be enabled with CFLAGS="-Dlint". It is also automatically
+	enabled by default when building from git (as opposed to tarball).
+
+	For consistency all instances of "#ifdef DEBUG_LEAKS" are replaced
+	with "#ifdef lint".
+
+	* sed/sed.h (struct subst): Add member variable to keep the address of
+	allocated buffer in compile.c:setup_replacement().
+	(release_regex): Add declaration.
+	(finish_program): Function now takes an argument: the sed program
+	vector.
+	* sed/sed.c (main): Adjust call to finish_program.
+	* sed/compile.c (finish_program): Release program allocations.
+	(setup_replacement): Remember the allocated buffer address.
+	(compile_program): Free temporary array in 'y' command.
+	* sed/execute.c (execute_program): Free allocated but unused buffer in
+	'R' command when reaching EOF.
+	* sed/regexp.c (release_regex): Remove 'static', free the allocated
+	dfa struct.
+	* sed/utils.c (panic): Free open files linked-list elements.
+
+2018-08-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: do not close stderr on exit
+	Not needed, and prevents leak-sanitizing from working.
+
+	* sed/utils.c (ck_fclose): Do not close stderr.
+
+2018-08-07  Jim Meyering  <meyering@fb.com>
+
+	doc: insert two missing words
+	doc/sed.texi (BRE vs ERE): Insert "with a".
+
+2018-08-04  Assaf Gordon  <assafgordon@gmail.com>
+
+	maint: syntax-check: prohibit-operator-at-eol
+	* cfg.mk (sc_prohibit_operator_at_end_of_line): Copied from coreutils'
+	cfg.mk.
+	* sed/execute.c (do_subst,execute_program): Adjust as needed.
+
+	maint: syntax-check: fail-0 and fail-1 in shell script tests
+	* cfg.mk (prohibit_fail_0,sc_prohibit_and_fail_1): Copied from
+	coreutils' cfg.mk
+	* testsuite/*.sh: Remove 'fail=0'.
+
+	maint: syntax-check: add various test-related checks
+	* cfg.mk (sc_prohibit_env_returns, sc_prohibit_perl_hash_quotes,
+	sc_prohibit_verbose_version, sc_prohibit_framework_failure,
+	sc_prohibit_test_backticks, sc_prohibit_test_empty): Copied from
+	coreutils' cfg.mk.
+
+	maint: syntax-check: add sc_prohibit_strncmp
+	* cfg.mk (sc_prohibit_strncmp): Copied from coreutils' cfg.mk.
+	* basicdefs.h (STREQ,STREQ_LEN,STRPREFIX): Copied from coreutils' system.h.
+	* sed/execute.c (translate_mb): Replace strncmp with STREQ_LEN.
+
+	maint: syntax-check: add sc_gitignore_missing
+	* cfg.mk (sc_gitignore_missing): Copied from coreutils' cfg.mk.
+	* .gitignore: Add missing files.
+
+	maint: syntax-check: prohibit-form-feed
+	* cfg.mk (sc_prohibit-form-feed): Copied from coreutils' cfg.mk.
+	* sed/compile.c, sed/execute.c, sed/regexp.c, sed/sed.h, sed/utils.c:
+	Remove form feed characters.
+
+	maint: syntax-check: space-before-open-paren
+	* cfg.mk (sc_space_before_open_paren): Copy target from coreutils' cfg.mk.
+	* basicdefs.h, sed/compile.c, sed/execute.c, sed/regexp.c,
+	sed/sed.c, sed/utils.c: Add space before parentheses.
+
+	maint: syntax-check: fix tab indentation
+	* sed/execute.c (open_next_file): Replace tab with spaces.
+
+2018-08-03  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: replace myname with gnulib's progname
+	* compile.c (bad_prog): Use program_name instead of myname.
+	* execute.c (open_next_file): Same.
+	* utils.c (panic):  Same.
+	  (myname): Remove variable.
+	* sed.c (usage): Use program_name instead of myname.
+	  (main): Call set_program_name once, don't set variables directly.
+
+	sed: replace ck_realloc with gnulib's xrealloc/xnrealloc
+	* basicdefs.h (REALLOC): Call xnrealloc instead of ck_realloc.
+	* sed/utils.c (ck_realloc): Remove.
+
+2018-08-03  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: replace MALLOC/ck_malloc with gnulib's XCALLOC
+	ck_malloc zero'd out the allocated buffer, thus replaced with
+	xcalloc/xzalloc (not xmalloc).
+
+	* basicdefs.h (MALLOC): Remove.
+	* utils.c (ck_malloc): Remove.
+	* sed/compile.c, sed/execute.c, sed/regexp.c, sed/sed.c: Replace
+	MALLOC with XCALLOC; ck_malloc with xzalloc.
+
+2018-08-03  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: replace ck_strdup with gnulib's xstrdup
+	* sed/utils.{c,h} (ck_strdup): Remove.
+	* sed/compile.c, sed/execute.c, sed/sed.c: Replace ck_strdup with
+	xstrdup.
+
+	sed: replace ck_memdup with gnulib's xmemdup
+	* bootstrap.conf: Add gnulib's xalloc module.
+	* basicdefs.h (MEMDUP): Remove.
+	* sed/utils.{c,h} (ck_memdup): Remove.
+
+2018-08-03  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: fix heap buffer overflow from multiline EOL regex optimization
+	sed would access invalid memory when matching EOF combined with
+	s///n flag:
+
+	  $ yes 0 | fmt -w 40 | head -n2 | valgrind sed 'N;s/$//2m'
+	  ==13131== Conditional jump or move depends on uninitialised value(s)
+	  ==13131==    at 0x4C3002B: memchr (vg_replace_strmem.c:883)
+	  ==13131==    by 0x1120BD: match_regex (regexp.c:286)
+	  ==13131==    by 0x110736: do_subst (execute.c:1101)
+	  ==13131==    by 0x1115D3: execute_program (execute.c:1591)
+	  ==13131==    by 0x111A4C: process_files (execute.c:1774)
+	  ==13131==    by 0x112E1C: main (sed.c:405)
+	  ==13131==
+	  ==13131== Invalid read of size 1
+	  ==13131==    at 0x4C30027: memchr (vg_replace_strmem.c:883)
+	  ==13131==    by 0x1120BD: match_regex (regexp.c:286)
+	  ==13131==    by 0x110736: do_subst (execute.c:1101)
+	  ==13131==    by 0x1115D3: execute_program (execute.c:1591)
+	  ==13131==    by 0x111A4C: process_files (execute.c:1774)
+	  ==13131==    by 0x112E1C: main (sed.c:405)
+	  ==13131==  Address 0x55ec765 is 0 bytes after a block of size 101 alloc'd
+	  ==13131==    at 0x4C2DDCF: realloc (vg_replace_malloc.c:785)
+	  ==13131==    by 0x113BA2: ck_realloc (utils.c:418)
+	  ==13131==    by 0x10E682: resize_line (execute.c:154)
+	  ==13131==    by 0x10E6F0: str_append (execute.c:165)
+	  ==13131==    by 0x110779: do_subst (execute.c:1106)
+	  ==13131==    by 0x1115D3: execute_program (execute.c:1591)
+	  ==13131==    by 0x111A4C: process_files (execute.c:1774)
+	  ==13131==    by 0x112E1C: main (sed.c:405)
+	  ==13131==
+
+	The ^/$ optimization code added in v4.2.2-161-g6dea75e called memchr()
+	using 'buflen', ignoring the value of 'buf_start_offset' (which, if not
+	zero, reduces the number of bytes available for the search).
+
+	Reported by bugs@feusi.co (bug#32271) in
+	https://lists.gnu.org/r/bug-sed/2018-07/msg00018.html .
+
+	* NEWS: Mention the fix.
+	* sed/regexp.c (match_regex): Use correct buffer length in memchr().
+	* testsuite/bug-32271-2.sh: Test using valgrind.
+	* testsuite/local.mk (T): Add new test.
+
+2018-08-03  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: fix extraneous NUL in s///n command
+	Under certain conditions sed would add an extraneous NUL:
+
+	    $ echo 0 | sed -e 's/$/a/2' | od -tx1 -An
+	     30 00 0a
+
+	This would happen when the regex is an empty (zero-length) match at the
+	end of the line (e.g. '$' and 'a*$') and the substitute number flag
+	('n' in s///n) is higher than the number of actual matches (multiple
+	EOL matches are possible with multiline match, e.g. 's/$/a/3m').
+
+	Details:
+	The comment at the top of 'execute.c:do_subst()' says:
+
+	       /* The first part of the loop optimizes s/xxx// when xxx is at the
+	          start, and s/xxx$// */
+
+	Which refers to lines 1051-3:
+
+	  1051 /* Copy stuff to the left of this match into the output string. */
+	  1052 if (start < offset)
+	  1053   str_append(&s_accum, line.active + start, offset - start);
+
+	The above code appends text to 's_accum' but does *not* update 'start'.
+
+	Later on, if the s/// command includes 'n' flag, and if 'matched == 0'
+	(an empty match), this comparison will be incorrect:
+
+	  1081  if (start < line.length)
+	  1082     matched = 1;
+
+	Will in turn will set 'matched' to 1, and the 'str_append' call that
+	follows (line 1087) will append an additional character.
+	Because the empty match is EOL, the appended character is NUL.
+
+	More examples that trigger the bug:
+
+	  echo 0 | sed -e 's/a*$/X/3'
+	  printf "%s\n" 0 0 0 | sed -e 'N;N;s/a*$/X/4m'
+
+	Examples that do not trigger the bug:
+
+	  # The 'a*' empty regex matches at the beginning of the line (in
+	  # addition to the end of the line), and the optimization in line
+	  # 1052 is skipped.
+	  echo 0 | sed -e 's/a*/X/3'
+
+	  # There are 3 EOLs in the pattern space, s///3 is not too large.
+	  printf "%s\n" 0 0 0 | sed -e 'N;N;s/a*$/X/3m'
+
+	This was discovered while investigating bug#32271 reported by bugs@feusi.co
+	in https://lists.gnu.org/r/bug-sed/2018-07/msg00018.html .
+
+	* NEWS: Mention the fix.
+	* sed/execute.c (do_subst): Update 'start' as needed.
+	* testsuite/bug-32271-1.sh: New test.
+	* testsuite/local.mk (T): Add test.
+
+2018-07-26  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: do not flush output stream unless in unbuffered mode
+	Previously sed would explicitly flush the output after
+	every output line, except if the output was stdout in unbuffered mode.
+
+	In practice this was equivalent to forcing line-buffering, and was
+	espcially was noticable with "sed -i" (where the output is a temporary
+	file).
+
+	With this change, explicit flushing only happens with "sed -u",
+	regardless of the type of output file, making "sed -i" much faster.
+	This change also affect other write commands such as 'w'/'W' and 's///w'.
+
+	Reported by Vidar Holen <vidar@vidarholen.net> in
+	https://lists.gnu.org/r/bug-sed/2018-07/msg00014.html .
+
+	* NEWS: Mention this.
+	* sed/execute.c (flush_output): Never flush output unless in unbuffered
+	mode, regardless of which file it is.
+
+2018-07-25  Bernhard Voelker  <mail@bernhard-voelker.de>
+
+	doc: tiny fix
+	* doc/sed.texi (Regexp Addresses): Remove the word 'two': there are
+	3 examples following.
+
+2018-07-08  Assaf Gordon  <assafgordon@gmail.com>
+
+	sed: fix heap buffer overflow from invalid references
+	Under certain conditions sed would access invalid memory based on
+	the requested back-reference (e.g. "s//\9/" would access the 9th element
+	in the regex registers without checking it is at least 9 element in
+	size).
+
+	The following examples would trigger valgrind errors:
+	    seq 2 | valgrind sed         -e '/^/s///p ; 2s//\9/'
+	    seq 2 | valgrind sed --posix -e '/2/p ;     2s//\9/'
+
+	Reported by bugs@feusi.co in
+	https://lists.gnu.org/r/bug-sed/2018-07/msg00004.html .
+
+	* NEWS: Mention the bugfix.
+	* sed/execute.c (append_replacement): Check number of allocated regex
+	replacement registers before accessing the array.
+	* sed/testsuite/bug32082.sh: Test sed for this behaviour under valgrind.
+	* sed/testsuite/local.mk (T): Add new test.
+
 2018-03-31  Jim Meyering  <meyering@fb.com>
+
+	maint: post-release administrivia
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* cfg.mk (old_NEWS_hash): Auto-update.
 
 	version 4.5
 	* NEWS: Record release date.
@@ -2799,9 +3401,3 @@
 	* lib/Makefile.am: Update.
 
 	maint: update bootstrap from gnulib
-
-2014-09-06  Jim Meyering  <meyering@fb.com>
-
-	fixup: add the properly-named new test files
-	* testsuite/Makefile.am (EXTRA_DIST): Add y-zero.*,
-	not y-NUL.* here.

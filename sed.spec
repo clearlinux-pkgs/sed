@@ -5,18 +5,20 @@
 # Source0 file verified with key 0x7FD9FCCB000BEEEE (meyering@fb.com)
 #
 Name     : sed
-Version  : 4.5
-Release  : 24
-URL      : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz
-Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz
-Source99 : https://mirrors.kernel.org/gnu/sed/sed-4.5.tar.xz.sig
+Version  : 4.6
+Release  : 25
+URL      : https://mirrors.kernel.org/gnu/sed/sed-4.6.tar.xz
+Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.6.tar.xz
+Source99 : https://mirrors.kernel.org/gnu/sed/sed-4.6.tar.xz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0 GPL-3.0+
-Requires: sed-bin
-Requires: sed-doc
-Requires: sed-locales
+Requires: sed-bin = %{version}-%{release}
+Requires: sed-license = %{version}-%{release}
+Requires: sed-locales = %{version}-%{release}
+Requires: sed-man = %{version}-%{release}
 BuildRequires : acl-dev
+BuildRequires : glibc-locale
 BuildRequires : libc6-locale
 BuildRequires : valgrind
 
@@ -27,6 +29,8 @@ GNU Sed website: https://www.gnu.org/software/sed/
 %package bin
 Summary: bin components for the sed package.
 Group: Binaries
+Requires: sed-license = %{version}-%{release}
+Requires: sed-man = %{version}-%{release}
 
 %description bin
 bin components for the sed package.
@@ -35,9 +39,18 @@ bin components for the sed package.
 %package doc
 Summary: doc components for the sed package.
 Group: Documentation
+Requires: sed-man = %{version}-%{release}
 
 %description doc
 doc components for the sed package.
+
+
+%package license
+Summary: license components for the sed package.
+Group: Default
+
+%description license
+license components for the sed package.
 
 
 %package locales
@@ -48,15 +61,23 @@ Group: Default
 locales components for the sed package.
 
 
+%package man
+Summary: man components for the sed package.
+Group: Default
+
+%description man
+man components for the sed package.
+
+
 %prep
-%setup -q -n sed-4.5
+%setup -q -n sed-4.6
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1522594761
+export SOURCE_DATE_EPOCH=1545309438
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -72,8 +93,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1522594761
+export SOURCE_DATE_EPOCH=1545309438
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/sed
+cp COPYING %{buildroot}/usr/share/package-licenses/sed/COPYING
 %make_install
 %find_lang sed
 
@@ -85,9 +108,16 @@ rm -rf %{buildroot}
 /usr/bin/sed
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc /usr/share/info/*
-%doc /usr/share/man/man1/*
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/sed/COPYING
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/sed.1
 
 %files locales -f sed.lang
 %defattr(-,root,root,-)
