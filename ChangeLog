@@ -1,4 +1,25 @@
+2018-12-20  Jim Meyering  <meyering@fb.com>
+
+	version 4.7
+	* NEWS: Record release date.
+
+	sed: fix \b DFA-bug in C locale
+	Under some conditions, \b would mistakenly fail to match. E.g.,
+	this would mistakenly print "123-x" instead of "123":
+	  echo 123-x|LC_ALL=C sed 's/.\bx//'
+	* NEWS (Bug fixes): Mention it
+	* gnulib: Update to latest, for DFA regression fix.
+	* testsuite/word-delim.sh: New file, to test for the dfa.c regression.
+	* testsuite/local.mk (T): Add it.
+	Reported by Jan Palus in
+	https://lists.gnu.org/r/sed-devel/2018-12/msg00022.html
+
 2018-12-19  Jim Meyering  <meyering@fb.com>
+
+	maint: post-release administrivia
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* cfg.mk (old_NEWS_hash): Auto-update.
 
 	version 4.6
 	* NEWS: Record release date.
