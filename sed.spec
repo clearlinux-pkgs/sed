@@ -6,7 +6,7 @@
 #
 Name     : sed
 Version  : 4.7
-Release  : 26
+Release  : 27
 URL      : https://mirrors.kernel.org/gnu/sed/sed-4.7.tar.xz
 Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.7.tar.xz
 Source99 : https://mirrors.kernel.org/gnu/sed/sed-4.7.tar.xz.sig
@@ -30,7 +30,6 @@ GNU Sed website: https://www.gnu.org/software/sed/
 Summary: bin components for the sed package.
 Group: Binaries
 Requires: sed-license = %{version}-%{release}
-Requires: sed-man = %{version}-%{release}
 
 %description bin
 bin components for the sed package.
@@ -77,7 +76,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1545429287
+export SOURCE_DATE_EPOCH=1551149983
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -93,7 +92,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1545429287
+export SOURCE_DATE_EPOCH=1551149983
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/sed
 cp COPYING %{buildroot}/usr/share/package-licenses/sed/COPYING

@@ -7,6 +7,7 @@ Thunar
 alsa-utils
 apr
 asciidoc
+authselect
 autoconf
 autoconf-archive
 bashdb
@@ -24,6 +25,7 @@ compat-libwebp-soname6
 compat-mpfr-soname4
 evince
 filesystem
+firewalld
 fish
 flatpak
 flatpak-builder
