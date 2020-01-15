@@ -1,7 +1,10 @@
 Configure miss: selinux/selinux.h
 Configure miss: crtdefs.h
 Configure miss: fpurge
-Configure miss: 32-bit host C ABI
+Configure miss: pthread_sigmask
+Configure miss: whether the compiler is clang
+Configure miss: compiler option needed when checking for declarations
+Configure miss: whether mbrtowc stores incomplete characters
 Configure miss: library containing setfilecon
 Configure miss: strerror_r with POSIX signature
 Configure miss: whether fflush works on input streams
@@ -21,4 +24,5 @@ Configure miss: whether fpurge is declared
 Configure miss: _fseeki64
 Configure miss: ioctl with POSIX signature
 Configure miss: working nanosleep
+Configure miss: whether pthread_sigmask is a macro
 Configure miss: whether -lcP is needed

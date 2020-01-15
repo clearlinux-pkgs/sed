@@ -1,5 +1,23 @@
 GNU sed NEWS                                    -*- outline -*-
 
+* Noteworthy changes in release 4.8 (2020-01-14) [stable]
+
+** Bug fixes
+
+  "sed -i" now creates temporary files with correct umask (limited to u=rwx).
+  Previously sed would incorrectly set umask on temporary files, resulting
+  in problems under certain fuse-like file systems.
+  [bug introduced in sed 4.2.1]
+
+** Release
+
+  distribute gzip-compressed tarballs once again
+
+** Improvements
+
+  a year's worth of gnulib development, including improved DFA performance
+
+
 * Noteworthy changes in release 4.7 (2018-12-20) [stable]
 
 ** Bug fixes

@@ -14,6 +14,7 @@ bash-completion
 bashdb
 binutils
 btrfs-progs
+cantor
 ceph
 check
 cifs-utils
@@ -55,8 +56,6 @@ libetonyek
 libevent
 libfreehand
 libgfortran-avx
-libgfortran-compat-soname3
-libgfortran-compat-soname4
 libgudev
 libkcapi
 libnl
