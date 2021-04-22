@@ -1,28 +1,28 @@
-Configure miss: selinux/selinux.h
-Configure miss: crtdefs.h
-Configure miss: fpurge
-Configure miss: pthread_sigmask
-Configure miss: whether the compiler is clang
-Configure miss: compiler option needed when checking for declarations
-Configure miss: whether mbrtowc stores incomplete characters
-Configure miss: library containing setfilecon
-Configure miss: strerror_r with POSIX signature
-Configure miss: whether fflush works on input streams
-Configure miss: fake locale system (OpenBSD)
-Configure miss: Solaris 11.4 locale system
+Configure miss: ACL_TYPE_EXTENDED
 Configure miss: CFLocaleCopyPreferredLanguages
-Configure miss: acl_delete_fd_np
-Configure miss: acl_delete_file_np
+Configure miss: Solaris 11.4 locale system
+Configure miss: _fseeki64
 Configure miss: acl_copy_ext_native
 Configure miss: acl_create_entry_np
-Configure miss: acl_to_short_text
+Configure miss: acl_delete_fd_np
+Configure miss: acl_delete_file_np
 Configure miss: acl_free_text
-Configure miss: ACL_TYPE_EXTENDED
-Configure miss: obstacks that work with any size object
-Configure miss: working re_compile_pattern
-Configure miss: whether fpurge is declared
-Configure miss: _fseeki64
+Configure miss: acl_to_short_text
+Configure miss: compiler option needed when checking for declarations
+Configure miss: crtdefs.h
+Configure miss: fake locale system (OpenBSD)
+Configure miss: fpurge
 Configure miss: ioctl with POSIX signature
-Configure miss: working nanosleep
-Configure miss: whether pthread_sigmask is a macro
+Configure miss: library containing setfilecon
+Configure miss: obstacks that work with any size object
+Configure miss: pthread_sigmask
+Configure miss: selinux/selinux.h
+Configure miss: strerror_r with POSIX signature
 Configure miss: whether -lcP is needed
+Configure miss: whether fflush works on input streams
+Configure miss: whether fpurge is declared
+Configure miss: whether mbrtowc stores incomplete characters
+Configure miss: whether pthread_sigmask is a macro
+Configure miss: whether the compiler is clang
+Configure miss: working nanosleep
+Configure miss: working re_compile_pattern

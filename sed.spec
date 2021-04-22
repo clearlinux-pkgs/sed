@@ -6,7 +6,7 @@
 #
 Name     : sed
 Version  : 4.8
-Release  : 29
+Release  : 30
 URL      : https://mirrors.kernel.org/gnu/sed/sed-4.8.tar.xz
 Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.8.tar.xz
 Source1  : https://mirrors.kernel.org/gnu/sed/sed-4.8.tar.xz.sig
@@ -77,15 +77,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579111002
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1619063143
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
+export FCFLAGS="$FFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
+export FFLAGS="$FFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 %configure --disable-static
 make  %{?_smp_mflags}
@@ -98,7 +97,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1579111002
+export SOURCE_DATE_EPOCH=1619063143
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/sed
 cp %{_builddir}/sed-4.8/COPYING %{buildroot}/usr/share/package-licenses/sed/0dd432edfab90223f22e49c02e2124f87d6f0a56
