@@ -6,7 +6,6 @@ SDL2_image
 Thunar
 alsa-utils
 apr
-asciidoc
 autoconf
 autoconf-archive
 bash-completion
@@ -19,8 +18,10 @@ check
 cifs-utils
 clutter
 clutter-gst
+compat-gcc-10
+compat-icu4c-soname67
 corosync
-efl
+debugedit
 eid-mw
 evince
 filesystem
@@ -28,6 +29,7 @@ firewalld
 flatpak
 flatpak-builder
 gcc
+gcc11
 gcc7
 gcc8
 gcc9
@@ -35,13 +37,11 @@ gdb
 ghostscript
 gnome-themes-extra
 gnutls
-gpaste
 gsl
 guile
-ias
 ibus-libpinyin
 icu4c
-iio-sensor-proxy
+inetutils
 isa-l
 kbd
 keepalived
@@ -50,6 +50,7 @@ kronosnet
 libetonyek
 libevent
 libfreehand
+libgphoto2
 libkcapi
 libmemcached
 libnl
@@ -62,6 +63,8 @@ libva
 libvisio
 libwebp
 libzmq
+llvm12
+llvm13
 lttng-tools
 lttng-ust
 mingw-crt
@@ -77,6 +80,7 @@ openmpi
 openvpn
 p7zip
 qbittorrent
+qt6base
 qtwebengine
 quagga
 subversion
@@ -93,6 +97,5 @@ xerces-c
 xfce4-panel
 xfce4-session
 xfdesktop
-xkeyboard-config
 xmlstarlet
 znc

@@ -8,21 +8,27 @@ Configure miss: acl_delete_fd_np
 Configure miss: acl_delete_file_np
 Configure miss: acl_free_text
 Configure miss: acl_to_short_text
+Configure miss: bool, true, false
 Configure miss: compiler option needed when checking for declarations
 Configure miss: crtdefs.h
 Configure miss: fake locale system (OpenBSD)
 Configure miss: fpurge
+Configure miss: gcc options needed to detect all undeclared functions
 Configure miss: ioctl with POSIX signature
 Configure miss: library containing setfilecon
+Configure miss: memset_s
+Configure miss: mquery
 Configure miss: obstacks that work with any size object
-Configure miss: pthread_sigmask
+Configure miss: pstat_getprocvm
 Configure miss: selinux/selinux.h
+Configure miss: stdckdint.h
 Configure miss: strerror_r with POSIX signature
 Configure miss: whether -lcP is needed
+Configure miss: whether ctype.h defines __header_inline
 Configure miss: whether fflush works on input streams
 Configure miss: whether fpurge is declared
 Configure miss: whether mbrtowc stores incomplete characters
 Configure miss: whether pthread_sigmask is a macro
 Configure miss: whether the compiler is clang
+Configure miss: whether the compiler produces multi-arch binaries
 Configure miss: working nanosleep
-Configure miss: working re_compile_pattern
