@@ -9,7 +9,7 @@
 #
 Name     : sed
 Version  : 4.9
-Release  : 32
+Release  : 33
 URL      : https://mirrors.kernel.org/gnu/sed/sed-4.9.tar.xz
 Source0  : https://mirrors.kernel.org/gnu/sed/sed-4.9.tar.xz
 Source1  : https://mirrors.kernel.org/gnu/sed/sed-4.9.tar.xz.sig
@@ -40,6 +40,7 @@ GNU Sed website: https://www.gnu.org/software/sed/
 Summary: bin components for the sed package.
 Group: Binaries
 Requires: sed-license = %{version}-%{release}
+Provides: /bin/sed
 
 %description bin
 bin components for the sed package.
@@ -94,7 +95,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1721841549
+export SOURCE_DATE_EPOCH=1721842836
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -146,7 +147,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1721841549
+export SOURCE_DATE_EPOCH=1721842836
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/sed
 cp %{_builddir}/sed-%{version}/COPYING %{buildroot}/usr/share/package-licenses/sed/31a3d460bb3c7d98845187c716a30db81c44b615 || :
